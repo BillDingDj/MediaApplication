@@ -6,8 +6,31 @@
 
 MyGLRenderContext* MyGLRenderContext::p_context = nullptr;
 
-void MyGLRenderContext::SetImageData(int format, int width, int height, uint8_t *pDatda) {
+void MyGLRenderContext::SetImageData(int format, int width, int height, uint8_t *pData) {
+    NativeImage nativeImage;
+    nativeImage.format = format;
+    nativeImage.width = width;
+    nativeImage.height = height;
+    nativeImage.ppPlane[0] = pData;
 
+    switch (format)
+    {
+        case IMAGE_FORMAT_NV12:
+        case IMAGE_FORMAT_NV21:
+            nativeImage.ppPlane[1] = nativeImage.ppPlane[0] + width * height;
+            break;
+        case IMAGE_FORMAT_I420:
+            nativeImage.ppPlane[1] = nativeImage.ppPlane[0] + width * height;
+            nativeImage.ppPlane[2] = nativeImage.ppPlane[1] + width * height / 4;
+            break;
+        default:
+            break;
+    }
+
+    if (sample)
+    {
+        sample->LoadImage(&nativeImage);
+    }
 }
 
 void MyGLRenderContext::OnSurfaceCreated() {
@@ -25,7 +48,7 @@ void MyGLRenderContext::OnDrawFrame() {
 
     if (sample) {
         sample->Init();
-        sample->Draw();
+        sample->Draw(0,0);
     }
 }
 

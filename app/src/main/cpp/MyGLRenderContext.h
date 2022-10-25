@@ -9,6 +9,7 @@
 #include "GLES3/gl3.h"
 #include "samples/TriangleSample.h"
 #include "utils/LogUtils.h"
+#include "samples/TextureMapSample.h"
 
 class MyGLRenderContext {
 
@@ -16,14 +17,14 @@ private:
     static MyGLRenderContext *p_context;
 
     MyGLRenderContext() {
-        sample = new TriangleSample();
+        sample = new TextureMapSample();
     }
 
     ~MyGLRenderContext() {
 
     }
 
-    TriangleSample *sample = nullptr;
+    TextureMapSample *sample = nullptr;
 
 public:
 
